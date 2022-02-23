@@ -1,10 +1,13 @@
 kaboom({
     global: true,
     fullscreen: true,
-    scale: 1,
+    scale: 2,
     debug: true,
     clearColor: [0, 0, 0, 1]
 })
+
+const MOVE_SPEED = 120
+const JUMP_FORCE = 360
 
 loadRoot('https://i.imgur.com/')
 loadSprite('coin', 'wbKxhcd.png')
@@ -24,16 +27,16 @@ scene("game", () => {
     layers(['bg', 'obj', 'ui'], 'obj')
 
     const map = [
-        '                                    ',
-        '                                    ',
-        '                                    ',
-        '                                    ',
-        '                                    ',
-        '     %    =*=%=                     ',
-        '                                    ',
-        '                          -+        ',
-        '                  ^   ^   ()        ',
-        '============================   ====='
+        '                                      ',
+        '                                      ',
+        '                                      ',
+        '                                      ',
+        '                                      ',
+        '     %   =*=%=                        ',
+        '                                      ',
+        '                            -+        ',
+        '                    ^   ^   ()        ',
+        '==============================   ====='
     ]
 
     const levelCfg = {
@@ -54,13 +57,37 @@ scene("game", () => {
 
     const gameLevel = addLevel(map, levelCfg)
 
+    const scoreLabel = add([
+        text('test'),
+        pos(30, 6),
+        layer('ui'),
+        {
+            value: 'test',
+        }
+    ])
+
+    add([text('level ' + 'test', pos(4, 6))])
+
     const player = add([
-        sprite('mario'), 
-        solid(),
+        sprite('mario'), solid(),
         pos(30, 0),
         body(),
         origin('bot')
-    ])
+      ])
+
+    keyDown('left', () => {
+        player.move(-MOVE_SPEED, 0)
+    })
+
+    keyDown('right', () => {
+        player.move(MOVE_SPEED, 0)
+    })
+
+    keyPress('space', () => {
+        if (player.grounded()) {
+            player.jump(JUMP_FORCE)
+        }
+    })
 })
 
 start("game")
